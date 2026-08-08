@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Kinetic Noir - The AI SaaS your product needs</title>
+  
+  <!-- Tailwind CSS v3 CDN with plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#43ea73',
+            'primary-container': '#0bcd5a',
+            surface: '#121316',
+            'surface-dim': '#121316',
+            'surface-bright': '#38393c',
+            'surface-container-lowest': '#0d0e10',
+            'surface-container-low': '#1b1c1e',
+            'surface-container': '#1f2022',
+            'surface-container-high': '#292a2c',
+            'surface-container-highest': '#343537',
+            'text-muted': '#B6C3CD',
+            'border-subtle': 'rgba(182, 195, 205, 0.15)',
+            'on-surface': '#e3e2e5'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'custom': '4px',
+            'custom-lg': '8px',
+          },
+          padding: {
+            'margin-desktop': '80px',
+            'margin-mobile': '20px',
+            'section-gap': '160px',
+          },
+          gap: {
+            'gutter-desktop': '24px',
+          },
+          animation: {
+            'spin-slow': 'spin 12s linear infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Base Reset & Variables */
+    body {
+      background-color: #0d0e10;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .light body {
+      background-color: #f8f9fa;
+      color: #121316;
+    }
+    
+    /* Scroll Progress Bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #43ea73, #0bcd5a);
+      z-index: 100;
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Glow blobs */
+    .glow-bg {
+      background: radial-gradient(circle at center, rgba(67, 234, 115, 0.15) 0%, transparent 70%);
+    }
+    .light .glow-bg {
+      background: radial-gradient(circle at center, rgba(11, 205, 90, 0.1) 0%, transparent 70%);
+    }
+
+    /* Grid Overlay */
+    .grid-bg {
+      background-image: linear-gradient(to right, rgba(182, 195, 205, 0.05) 1px, transparent 1px), 
+                        linear-gradient(to bottom, rgba(182, 195, 205, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .light .grid-bg {
+      background-image: linear-gradient(to right, rgba(18, 19, 22, 0.03) 1px, transparent 1px), 
+                        linear-gradient(to bottom, rgba(18, 19, 22, 0.03) 1px, transparent 1px);
+    }
+
+    /* Reveal on Scroll Class */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom underline animation for Nav links */
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #43ea73;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Smooth tilt dashboard */
+    .dashboard-preview {
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+    }
+    .light .dashboard-preview {
+      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Details/Summary styles */
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary svg {
+      transform: rotate(180deg);
+    }
+    details summary {
+      outline: none;
+    }
+
+    /* Custom animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Interactive Card hover */
+    .interactive-card {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .interactive-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(67, 234, 115, 0.4);
+      box-shadow: 0 20px 40px -15px rgba(67, 234, 115, 0.1);
+    }
+    .light .interactive-card:hover {
+      box-shadow: 0 20px 40px -15px rgba(11, 205, 90, 0.08);
+    }
+  </style>
+</head>
+<body class="antialiased overflow-x-hidden bg-surface-container-lowest dark:bg-surface-container-lowest text-gray-900 dark:text-white">
+
+  <!-- Top Scroll Indicator -->
+  <div id="scroll-progress"></div>
+
+  <!-- BEGIN: TopNavBar -->
+  <nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-surface/80 backdrop-blur-md border-b border-black/10 dark:border-border-subtle transition-all duration-300">
+    <div class="flex justify-between items-center px-[5%] py-5 max-w-7xl mx-auto">
+      <div class="flex items-center gap-2">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-custom bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center font-black text-black tracking-tighter text-lg">
+            K
+          </div>
+          <span class="font-extrabold text-xl tracking-tight text-gray-900 dark:text-white">KINETIC <span class="text-primary font-bold">NOIR</span></span>
+        </div>
+      </div>
+      
+      <!-- Nav Links with Slide Underline -->
+      <div class="hidden md:flex items-center gap-8">
+        <a class="nav-link text-primary font-bold pb-1" href="#home">Home</a>
+        <a class="nav-link text-gray-500 dark:text-gray-400 font-medium hover:text-primary dark:hover:text-primary transition-colors pb-1" href="#features">Features</a>
+        <a class="nav-link text-gray-500 dark:text-gray-400 font-medium hover:text-primary dark:hover:text-primary transition-colors pb-1" href="#integrations">Integrations</a>
+        <a class="nav-link text-gray-500 dark:text-gray-400 font-medium hover:text-primary dark:hover:text-primary transition-colors pb-1" href="#pricing">Pricing</a>
+        <a class="nav-link text-gray-500 dark:text-gray-400 font-medium hover:text-primary dark:hover:text-primary transition-colors pb-1" href="#faq">FAQ</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Mode Toggle Button -->
+        <button id="theme-toggle" class="p-2 rounded-custom hover:bg-black/5 dark:hover:bg-surface-bright transition-colors text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary flex items-center justify-center border border-black/10 dark:border-border-subtle">
+          <span class="material-symbols-outlined dark:block hidden text-xl">light_mode</span>
+          <span class="material-symbols-outlined dark:hidden block text-xl">dark_mode</span>
+        </button>
+        
+        <!-- CTA Button -->
+        <button class="bg-primary text-black px-6 py-2.5 rounded-custom font-extrabold text-sm hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </nav>
+  <!-- END: TopNavBar -->
+
+  <!-- BEGIN: HeroSection -->
+  <section id="home" class="relative pt-32 pb-24 min-h-screen flex items-center overflow-hidden bg-white dark:bg-surface-container-lowest">
+    <div class="absolute inset-0 glow-bg pointer-events-none z-0"></div>
+    <div class="absolute inset-0 grid-bg opacity-40 pointer-events-none z-0"></div>
+    
+    <div class="container mx-auto px-6 relative z-10 text-center max-w-5xl">
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle mb-8 animate-float">
+        <span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+        <span class="text-xs font-bold text-gray-600 dark:text-gray-300">🔥 Launching in 100 days</span>
+      </div>
+      
+      <!-- Headline display-lg-mobile / display-lg -->
+      <h1 class="text-4xl md:text-7xl font-extrabold mb-6 tracking-tighter leading-tight text-gray-900 dark:text-white">
+        The AI SaaS your <br class="hidden md:block"/> product needs
+      </h1>
+      
+      <!-- Body Text body-lg -->
+      <p class="text-gray-600 dark:text-text-muted max-w-2xl mx-auto text-lg mb-10 leading-relaxed">
+        Our AI SaaS solution enhances your product with advanced artificial intelligence, streamlining operations and driving efficiency and innovation.
+      </p>
+      
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 max-w-md mx-auto sm:max-w-none">
+        <button class="bg-primary text-black px-8 py-4 rounded-custom font-extrabold text-base w-full sm:w-auto hover:bg-[#34db63] hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all">
+          Get Template
+        </button>
+        <button class="bg-white dark:bg-surface-container-low text-gray-900 dark:text-white border border-black/10 dark:border-border-subtle px-8 py-4 rounded-custom font-extrabold text-base w-full sm:w-auto hover:bg-black/5 dark:hover:bg-surface-bright active:scale-95 transition-all">
+          Learn More
+        </button>
+      </div>
+      
+      <!-- Interactive Dashboard Preview Graphic -->
+      <div class="relative max-w-4xl mx-auto perspective-1000 group z-10" id="dashboard-container">
+        <div class="dashboard-preview bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom p-4 md:p-6 overflow-hidden transform duration-700 hover:-translate-y-4 hover:shadow-2xl">
+          
+          <!-- Browser Header -->
+          <div class="flex items-center gap-4 mb-6 border-b border-black/10 dark:border-border-subtle pb-4">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-primary/80"></div>
+            </div>
+            <div class="bg-black/5 dark:bg-surface-container-lowest rounded px-4 py-1 text-[11px] text-gray-500 dark:text-gray-400 flex-1 text-left border border-black/5 dark:border-border-subtle">
+              app.kineticnoir.ai/dashboard
+            </div>
+          </div>
+          
+          <!-- Dashboard Content -->
+          <div class="grid grid-cols-12 gap-6 text-left">
+            <!-- Sidebar Mock -->
+            <div class="col-span-3 space-y-5 hidden md:block border-r border-black/10 dark:border-border-subtle pr-4">
+              <div class="h-8 bg-primary/10 rounded-custom border border-primary/20 w-3/4 flex items-center px-2">
+                <div class="w-3 h-3 rounded-full bg-primary mr-2"></div>
+                <div class="h-2 bg-primary/30 rounded w-12"></div>
+              </div>
+              <div class="space-y-3">
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-full hover:bg-primary/20 cursor-pointer transition-colors"></div>
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-5/6 hover:bg-primary/20 cursor-pointer transition-colors"></div>
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-4/6 hover:bg-primary/20 cursor-pointer transition-colors"></div>
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-full hover:bg-primary/20 cursor-pointer transition-colors"></div>
+              </div>
+              <div class="pt-8 space-y-3">
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-3/4"></div>
+                <div class="h-2 bg-gray-300 dark:bg-subtle rounded w-1/2"></div>
+              </div>
+            </div>
+            
+            <!-- Main Content Mock -->
+            <div class="col-span-12 md:col-span-9 space-y-6">
+              <!-- Metric Cards -->
+              <div class="grid grid-cols-3 gap-4">
+                <div class="bg-black/5 dark:bg-surface-container-lowest p-4 rounded-custom border border-black/10 dark:border-border-subtle hover:border-primary/40 hover:scale-105 transition-all duration-300 cursor-pointer">
+                  <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Total Users</div>
+                  <div class="text-xl font-extrabold text-gray-900 dark:text-white">24.5k</div>
+                  <div class="text-[10px] text-primary mt-1 font-bold">+12% ↑</div>
+                </div>
+                <div class="bg-black/5 dark:bg-surface-container-lowest p-4 rounded-custom border border-black/10 dark:border-border-subtle hover:border-primary/40 hover:scale-105 transition-all duration-300 cursor-pointer">
+                  <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Revenue</div>
+                  <div class="text-xl font-extrabold text-primary">$142.0k</div>
+                  <div class="text-[10px] text-primary mt-1 font-bold">+8% ↑</div>
+                </div>
+                <div class="bg-black/5 dark:bg-surface-container-lowest p-4 rounded-custom border border-black/10 dark:border-border-subtle hover:border-primary/40 hover:scale-105 transition-all duration-300 cursor-pointer">
+                  <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Efficiency</div>
+                  <div class="text-xl font-extrabold text-gray-900 dark:text-white">94.2%</div>
+                  <div class="text-[10px] text-primary mt-1 font-bold">+5% ↑</div>
+                </div>
+              </div>
+              
+              <!-- Main Chart Area -->
+              <div class="bg-black/5 dark:bg-surface-container-lowest p-6 rounded-custom border border-black/10 dark:border-border-subtle h-48 relative overflow-hidden">
+                <div class="flex justify-between items-center mb-6 z-10 relative">
+                  <div class="h-4 bg-gray-300 dark:bg-subtle rounded w-24"></div>
+                  <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded bg-primary/20"></div>
+                    <div class="w-3 h-3 rounded bg-primary"></div>
+                  </div>
+                </div>
+                <!-- Interactive Wave Chart using SVG -->
+                <svg class="absolute bottom-0 left-0 w-full h-28" preserveAspectRatio="none" viewBox="0 0 400 100">
+                  <path d="M0,80 C100,20 150,90 200,40 C250,10 350,50 400,20 L400,100 L0,100 Z" fill="rgba(67, 234, 115, 0.1)"></path>
+                  <path d="M0,80 C100,20 150,90 200,40 C250,10 350,50 400,20" fill="none" stroke="#43ea73" stroke-width="3"></path>
+                  <g class="cursor-pointer">
+                    <circle cx="200" cy="40" r="5" fill="#43ea73"></circle>
+                    <circle cx="200" cy="40" r="10" fill="none" stroke="#43ea73" stroke-width="1.5" class="animate-ping"></circle>
+                  </g>
+                </svg>
+              </div>
+              
+              <!-- Bottom Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-black/5 dark:bg-surface-container-lowest p-4 rounded-custom border border-black/10 dark:border-border-subtle">
+                  <div class="h-3 bg-gray-300 dark:bg-subtle rounded w-1/3 mb-4"></div>
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 rounded-full bg-gray-300 dark:bg-surface-bright flex items-center justify-center text-[10px] text-gray-500 font-bold">JD</div>
+                      <div class="h-2 bg-gray-300 dark:bg-subtle rounded flex-1"></div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 rounded-full bg-gray-300 dark:bg-surface-bright flex items-center justify-center text-[10px] text-gray-500 font-bold">AS</div>
+                      <div class="h-2 bg-gray-300 dark:bg-subtle rounded flex-1"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-black/5 dark:bg-surface-container-lowest p-4 rounded-custom border border-black/10 dark:border-border-subtle flex flex-col justify-center items-center">
+                  <div class="w-10 h-10 rounded-full border-2 border-primary/20 border-t-primary animate-spin-slow"></div>
+                  <div class="mt-3 text-[10px] font-bold text-primary uppercase tracking-widest">Optimizing AI</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute -top-6 -right-6 bg-primary text-black p-4 rounded-custom font-extrabold shadow-xl hidden lg:block transform rotate-6 border border-white/20 hover:scale-105 transition-transform duration-300 cursor-pointer">
+          <div class="text-[10px] uppercase opacity-75">Active Sessions</div>
+          <div class="text-xl font-black">1,240</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: HeroSection -->
+
+  <!-- BEGIN: LogosSection -->
+  <section class="py-16 border-y border-black/10 dark:border-border-subtle bg-white dark:bg-surface-container-lowest">
+    <div class="container mx-auto px-6 overflow-hidden">
+      <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 dark:opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
+        <span class="font-extrabold text-xl text-gray-800 dark:text-gray-400">⚡ Logoipsum</span>
+        <span class="font-extrabold text-xl text-gray-800 dark:text-gray-400">❖ Logoipsum</span>
+        <span class="font-extrabold text-xl text-gray-800 dark:text-gray-400">⬡ Logoipsum</span>
+        <span class="font-extrabold text-xl text-gray-800 dark:text-gray-400">▲ Logoipsum</span>
+      </div>
+    </div>
+  </section>
+  <!-- END: LogosSection -->
+
+  <!-- BEGIN: FutureOfWorkSection -->
+  <section id="features" class="py-32 relative overflow-hidden bg-gray-55 dark:bg-surface-container-lowest">
+    <div class="container mx-auto px-6">
+      
+      <!-- Section Title & Description -->
+      <div class="text-center mb-20 reveal">
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Access to the future of work</h2>
+        <p class="text-gray-600 dark:text-text-muted max-w-2xl mx-auto text-base leading-relaxed">
+          Experience AI-driven features: intelligent automation, seamless integrations, and real-time insights. Benefit from a user-friendly interface and top-notch security, boosting your team's productivity.
+        </p>
+      </div>
+      
+      <!-- Feature Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Scalability Card (Green Accent) -->
+        <div class="lg:col-span-2 relative group rounded-custom overflow-hidden bg-[#43ea73]/10 dark:bg-primary/5 border border-primary/20 p-8 min-h-[400px] flex flex-col justify-end interactive-card reveal">
+          <!-- Abstract Background Grid -->
+          <div class="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-30 group-hover:scale-105 transition-transform duration-700 grid-bg pointer-events-none"></div>
+          
+          <div class="relative z-10 text-left">
+            <span class="bg-primary/20 text-primary dark:text-[#39e36c] px-3 py-1 rounded-full text-xs font-bold mb-4 inline-block tracking-wider uppercase">Scalability</span>
+            <h3 class="text-3xl font-extrabold mb-3 tracking-tight text-gray-900 dark:text-white">Build Scalable product <br/> with the help of our AI</h3>
+            <p class="text-gray-600 dark:text-text-muted max-w-md text-sm leading-relaxed">
+              Easily scale your resources up or down based on business needs without hardware limitations or performance bottlenecks.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Video Card with Interactive Modal Trigger -->
+        <div class="relative group rounded-custom overflow-hidden bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle min-h-[400px] interactive-card reveal cursor-pointer" id="play-video-card">
+          <!-- Background Cover Image -->
+          <div class="absolute inset-0 w-full h-full bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcDNgO_qnoe9sXkm24VFbJQdYYcwPcTxJeaYoXwYoGptruy_XYQfkvWGg6h3tD0y_buGkwq9PwQE_b6PZ8y2HRBWfO6JlyjhMDaARstnZ1FBk6D2xsa97iZ6JOYJHhRJUm_C3TprumFeQGFMW2AADp54IlQixHEAYF1zxqZul_-9kc5axUEk3FUnLiin0x5DM96QnknySVXknAQm7LmHqj7p172CJY-uvVSHalT3q-WZHOE56ITzyd9dh9UufRlqxle-Ujc6gu8kg');"></div>
+          
+          <!-- Black Overlay -->
+          <div class="absolute inset-0 bg-black/40 flex flex-col justify-between p-8">
+            <span class="bg-white/20 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold self-start tracking-wider uppercase">Product Demo</span>
+            
+            <div class="flex items-center justify-center my-auto">
+              <button class="w-16 h-16 bg-primary text-black rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-primary/30">
+                <svg class="w-6 h-6 ml-1 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5l12 6.5-12 6.5v-13z"></path></svg>
+              </button>
+            </div>
+            
+            <div class="text-left text-white">
+              <h4 class="font-bold text-lg">Watch How it Works</h4>
+              <p class="text-xs text-white/80 mt-1">2-minute technical walkthrough</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Cost Effectiveness -->
+        <div class="bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom p-8 interactive-card reveal text-left">
+          <div class="bg-black/5 dark:bg-surface-bright rounded-custom p-4 mb-6 border border-black/10 dark:border-border-subtle inline-block">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary/20 rounded-custom flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-lg">check_circle</span>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900 dark:text-white">Subscription Successful</p>
+                <p class="text-xs text-gray-500">Today, 09:24</p>
+              </div>
+            </div>
+          </div>
+          <h4 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Cost effectiveness</h4>
+          <p class="text-gray-600 dark:text-text-muted text-sm leading-relaxed">
+            Reduce upfront infrastructure expenditures with a subscription-based scaling model and avoid ongoing physical hardware upkeep.
+          </p>
+        </div>
+        
+        <!-- User Retention (Graph visualization) -->
+        <div class="bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom p-8 flex flex-col justify-between interactive-card reveal text-left">
+          <!-- Mini HTML Bars -->
+          <div class="flex items-end gap-2 mb-6 h-28 border-b border-black/10 dark:border-border-subtle pb-1">
+            <div class="bg-primary/20 w-full h-1/2 rounded-custom hover:bg-primary transition-colors cursor-pointer" title="Q1: 50%"></div>
+            <div class="bg-primary/40 w-full h-[65%] rounded-custom hover:bg-primary transition-colors cursor-pointer" title="Q2: 65%"></div>
+            <div class="bg-primary/30 w-full h-2/5 rounded-custom hover:bg-primary transition-colors cursor-pointer" title="Q3: 40%"></div>
+            <div class="bg-primary/80 w-full h-[85%] rounded-custom hover:bg-primary transition-colors cursor-pointer" title="Q4: 85%"></div>
+            <div class="bg-primary w-full h-full rounded-custom hover:bg-[#34db63] transition-colors cursor-pointer animate-pulse" title="Current Q5: 90%"></div>
+          </div>
+          <div>
+            <h4 class="text-5xl font-black text-primary mb-1">90%</h4>
+            <p class="text-gray-900 dark:text-white font-extrabold text-sm tracking-wide">User Retention Metric</p>
+            <p class="text-xs text-gray-500 mt-1">Industry standard benchmark average is ~45%</p>
+          </div>
+        </div>
+        
+        <!-- Analytics and Insights (Solid Accent) -->
+        <div class="bg-primary text-black rounded-custom p-8 group hover:bg-[#34db63] transition-colors cursor-pointer flex flex-col justify-between text-left reveal">
+          <div class="w-12 h-12 bg-black/10 rounded-custom flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-black text-2xl font-bold">trending_up</span>
+          </div>
+          <div>
+            <h4 class="text-2xl font-black mb-3">Analytics &amp; Insights</h4>
+            <p class="text-black/80 text-sm font-medium leading-relaxed">
+              Gain valuable insights through built-in analytics, enabling data-driven optimization and rapid product alignment.
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: FutureOfWorkSection -->
+
+  <!-- BEGIN: UnlimitedAccessSection -->
+  <section class="py-32 bg-white dark:bg-surface-container-lowest border-y border-black/10 dark:border-border-subtle">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col lg:flex-row gap-16 items-center">
+        
+        <!-- Left: Text Block -->
+        <div class="lg:w-1/2 text-left reveal">
+          <div class="inline-flex items-center gap-2 text-primary font-extrabold mb-4 uppercase tracking-wider text-sm">
+             ✨ Product Features
+          </div>
+          <h2 class="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight leading-tight">Unlimited Access to AI</h2>
+          <p class="text-gray-600 dark:text-text-muted mb-12 text-base leading-relaxed">
+            Discover powerful capabilities: real-time insights, seamless database automation, and fast deployments. Enjoy a clean, responsive client interface designed to optimize developer workflow.
+          </p>
+          
+          <div class="space-y-10">
+            <!-- Feature Item 1 -->
+            <div class="border-l-2 border-primary pl-6">
+              <h5 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Video Generator</h5>
+              <p class="text-gray-600 dark:text-text-muted text-sm mb-3 leading-relaxed">
+                Create high-fidelity dynamic video files directly inside the SaaS workspace using our automated cloud render pipelines.
+              </p>
+              <a class="text-primary text-xs font-bold flex items-center gap-1 group w-fit" href="#">
+                Read More <span class="group-hover:translate-x-1.5 transition-transform duration-350">→</span>
+              </a>
+            </div>
+            
+            <!-- Feature Item 2 -->
+            <div class="border-l-2 border-primary pl-6">
+              <h5 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Predictive Analysis</h5>
+              <p class="text-gray-600 dark:text-text-muted text-sm mb-3 leading-relaxed">
+                Leverage real-time analytical calculations to predict future user engagement changes based on custom triggers.
+              </p>
+              <a class="text-primary text-xs font-bold flex items-center gap-1 group w-fit" href="#">
+                Read More <span class="group-hover:translate-x-1.5 transition-transform duration-350">→</span>
+              </a>
+            </div>
+          </div>
+          
+          <button class="mt-12 bg-primary text-black px-8 py-3.5 rounded-custom font-extrabold text-sm hover:opacity-90 hover:shadow-lg hover:shadow-primary/10 active:scale-95 transition-all">
+            More Features
+          </button>
+        </div>
+        
+        <!-- Right: Graphic Frame -->
+        <div class="lg:w-1/2 w-full reveal">
+          <div class="relative rounded-custom overflow-hidden shadow-2xl border border-black/10 dark:border-border-subtle group">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+            <img alt="Feature Spotlight" class="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uiRs8Vx9ovNbK1iD6zpk7D8jE9xqjYjobFrOm6EyaijliXiwycHdGfn9apl9WvqL8yzB6h38F4DCGl8ppY9OegQ4v0wuX0hX30JzkfrP-6uczSrZRaGY47MAWccQYyG5FmZ9b3RT-wecvlUkWKDIC6tAhMaJ_1dLHq3n148aT2u_Lku8rndPmy3z9wnwTmgb2yUivlWmTNAouf0M_ntYmSQhzvEqCrO1_VSBpq_PQUj5L8bW30qrbqhuD8"/>
+            <div class="absolute bottom-6 left-6 z-20 text-white text-left">
+              <span class="text-[10px] bg-primary text-black px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Spotlight</span>
+              <h4 class="font-extrabold text-lg mt-2">Custom AI Integrations</h4>
+              <p class="text-xs text-white/80 mt-1">Connect your database keys in 30 seconds</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: UnlimitedAccessSection -->
+
+  <!-- BEGIN: TrustedSection -->
+  <section class="py-32 relative overflow-hidden bg-gray-55 dark:bg-surface-container-lowest">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] glow-bg pointer-events-none"></div>
+    
+    <div class="container mx-auto px-6 relative z-10">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-20 reveal">
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight text-gray-900 dark:text-white">Tested &amp; trusted by 1000+ SaaS brands</h2>
+        <p class="text-gray-600 dark:text-text-muted max-w-2xl mx-auto text-base leading-relaxed">
+          Users trust our SaaS platform for its proven system uptime reliability, advanced end-to-end data encryption, and operational efficiency gains.
+        </p>
+      </div>
+      
+      <!-- Three Column Trust Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Reliability -->
+        <div class="bg-white/50 dark:bg-surface-container-low/50 backdrop-blur-sm border border-black/10 dark:border-border-subtle p-10 rounded-custom text-center interactive-card reveal">
+          <div class="w-14 h-14 bg-primary/10 rounded-custom flex items-center justify-center mx-auto mb-6 text-primary border border-primary/20">
+            <span class="material-symbols-outlined text-2xl">verified_user</span>
+          </div>
+          <h5 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Reliability</h5>
+          <p class="text-gray-600 dark:text-text-muted text-sm leading-relaxed">
+            Guarantees consistent backend uptime metrics and seamless database replication schedules.
+          </p>
+        </div>
+        
+        <!-- Security -->
+        <div class="bg-white/50 dark:bg-surface-container-low/50 backdrop-blur-sm border border-black/10 dark:border-border-subtle p-10 rounded-custom text-center interactive-card reveal">
+          <div class="w-14 h-14 bg-primary/10 rounded-custom flex items-center justify-center mx-auto mb-6 text-primary border border-primary/20">
+            <span class="material-symbols-outlined text-2xl">lock</span>
+          </div>
+          <h5 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Security</h5>
+          <p class="text-gray-600 dark:text-text-muted text-sm leading-relaxed">
+            Prioritizes strict client keys encryption, role-level permissions (RLS), and payload validation signatures.
+          </p>
+        </div>
+        
+        <!-- Transformation -->
+        <div class="bg-white/50 dark:bg-surface-container-low/50 backdrop-blur-sm border border-black/10 dark:border-border-subtle p-10 rounded-custom text-center interactive-card reveal">
+          <div class="w-14 h-14 bg-primary/10 rounded-custom flex items-center justify-center mx-auto mb-6 text-primary border border-primary/20">
+            <span class="material-symbols-outlined text-2xl">insights</span>
+          </div>
+          <h5 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Transformation</h5>
+          <p class="text-gray-600 dark:text-text-muted text-sm leading-relaxed">
+            Dramatically enhances team automation, workflow visibility, and rapid data optimization.
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: TrustedSection -->
+
+  <!-- BEGIN: IntegrationsSection -->
+  <section id="integrations" class="py-32 bg-white dark:bg-surface-container-lowest border-y border-black/10 dark:border-border-subtle">
+    <div class="container mx-auto px-6">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-20 reveal">
+        <div class="inline-flex items-center gap-2 text-primary font-extrabold mb-4 uppercase tracking-wider text-sm">
+          ✨ Core Integrations
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Connect to all you need</h2>
+        <p class="text-gray-600 dark:text-text-muted max-w-2xl mx-auto text-base leading-relaxed">
+          Our AI SaaS platform seamlessly integrates with your existing workflow databases, CRM stacks, and communications tools out of the box.
+        </p>
+      </div>
+      
+      <!-- Integration Logos Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">⚡ Github</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">❖ Slack</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">▲ Vercel</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">⬡ Notion</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">◆ Figma</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">■ Stripe</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">● Shopify</span>
+        </div>
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-8 rounded-custom flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:border-primary/30 transition-all cursor-pointer">
+          <span class="font-extrabold text-lg text-gray-800 dark:text-gray-400 hover:text-white">▼ Discord</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END: IntegrationsSection -->
+
+  <!-- BEGIN: FAQSection -->
+  <section id="faq" class="py-32 bg-gray-55 dark:bg-surface-container-lowest">
+    <div class="container mx-auto px-6 max-w-3xl">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-20 reveal">
+        <div class="inline-flex items-center gap-2 text-primary font-extrabold mb-4 uppercase tracking-wider text-sm">
+          ✨ FAQs
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Answers to your questions</h2>
+      </div>
+      
+      <!-- Accordion Container -->
+      <div class="space-y-4">
+        
+        <!-- Accordion Item 1 -->
+        <details class="accordion-item bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom overflow-hidden group reveal" open>
+          <summary class="flex justify-between items-center p-6 cursor-pointer font-bold list-none text-gray-900 dark:text-white hover:text-primary transition-colors">
+            What types of AI capabilities does your platform offer?
+            <svg class="w-5 h-5 text-primary transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 dark:text-text-muted text-sm leading-relaxed border-t border-black/5 dark:border-border-subtle/5 pt-4">
+            Our AI SaaS solution enhances your product with advanced artificial intelligence, streamlining operations and driving efficiency and innovation. It includes automated predictive data analysis, model orchestration triggers, and media asset rendering pipelines.
+          </div>
+        </details>
+        
+        <!-- Accordion Item 2 -->
+        <details class="accordion-item bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom overflow-hidden group reveal">
+          <summary class="flex justify-between items-center p-6 cursor-pointer font-bold list-none text-gray-900 dark:text-white hover:text-primary transition-colors">
+            How does your platform ensure data privacy and security?
+            <svg class="w-5 h-5 text-primary transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 dark:text-text-muted text-sm leading-relaxed border-t border-black/5 dark:border-border-subtle/5 pt-4">
+            We prioritize strict data protection protocols. All sensitive environment configurations, tokens, and payloads are encrypted using industry-standard AES-256-GCM. We enforce strict Row Level Security (RLS) policies on every database request and cryptographically verify all external webhooks.
+          </div>
+        </details>
+        
+        <!-- Accordion Item 3 -->
+        <details class="accordion-item bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom overflow-hidden group reveal">
+          <summary class="flex justify-between items-center p-6 cursor-pointer font-bold list-none text-gray-900 dark:text-white hover:text-primary transition-colors">
+            Can your platform integrate with our existing software systems?
+            <svg class="w-5 h-5 text-primary transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 dark:text-text-muted text-sm leading-relaxed border-t border-black/5 dark:border-border-subtle/5 pt-4">
+            Yes. We offer fully functional REST APIs, automated webhooks, and direct native connect bridges for popular version control, databases, messaging networks, and payment hubs. Custom integrations can also be easily automated using our trigger-step engine.
+          </div>
+        </details>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: FAQSection -->
+
+  <!-- BEGIN: PricingSection -->
+  <section id="pricing" class="py-32 relative overflow-hidden bg-white dark:bg-surface-container-lowest">
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[600px] glow-bg pointer-events-none transform rotate-180"></div>
+    
+    <div class="container mx-auto px-6 relative z-10">
+      
+      <!-- Section Title & Toggle -->
+      <div class="text-center mb-20 reveal">
+        <div class="inline-flex items-center gap-2 text-primary font-extrabold mb-4 uppercase tracking-wider text-sm">
+          ✨ Plan &amp; pricing
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Commence your AI Journey</h2>
+        <p class="text-gray-600 dark:text-text-muted max-w-xl mx-auto text-base leading-relaxed">
+          Select from our flexible plans to access powerful AI nodes, database integrations, and developer support.
+        </p>
+        
+        <!-- Toggle Button Container -->
+        <div class="flex items-center justify-center gap-2 mt-10 p-1.5 bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom w-fit mx-auto">
+          <button id="toggle-monthly" class="px-8 py-2 bg-primary text-black font-extrabold rounded-custom text-sm transition-all duration-300">Monthly</button>
+          <button id="toggle-yearly" class="px-8 py-2 text-gray-500 dark:text-gray-400 font-extrabold rounded-custom text-sm hover:text-gray-900 dark:hover:text-white transition-all duration-300">Yearly <span class="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded-full ml-1">-20%</span></button>
+        </div>
+      </div>
+      
+      <!-- Pricing Card Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        
+        <!-- Basic Plan Card -->
+        <div class="bg-white dark:bg-surface-container-low border border-black/10 dark:border-border-subtle rounded-custom p-10 flex flex-col interactive-card text-left reveal">
+          <div class="mb-8 border-b border-black/10 dark:border-border-subtle pb-6">
+            <h5 class="text-lg font-extrabold mb-2 text-gray-900 dark:text-white">Basic Plan</h5>
+            <div class="flex items-baseline gap-1">
+              <span class="text-5xl font-black text-gray-900 dark:text-white" id="basic-price">$67</span>
+              <span class="text-xs text-gray-500 font-bold" id="basic-period">/mo</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Billed monthly. Cancel anytime.</p>
+          </div>
+          <ul class="space-y-4 mb-10 text-gray-600 dark:text-text-muted flex-1">
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Access to core AI feature pipelines</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Basic predictive data analytics</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Up to 5 automation rule branches</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Secured data storage (10GB)</li>
+          </ul>
+          <button class="mt-auto bg-gray-900 dark:bg-surface-container-highest text-white border border-transparent dark:border-border-subtle py-4 rounded-custom font-extrabold hover:bg-black dark:hover:bg-surface-bright active:scale-95 transition-all text-sm">
+            Get Started
+          </button>
+        </div>
+        
+        <!-- Teams Plan Card (Vibrant Highlight) -->
+        <div class="bg-white dark:bg-surface-container-low border-2 border-primary rounded-custom p-10 flex flex-col relative interactive-card text-left reveal">
+          <div class="absolute -top-4 right-8 bg-primary text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Popular</div>
+          
+          <div class="mb-8 border-b border-black/10 dark:border-border-subtle pb-6">
+            <div class="flex items-center gap-2 mb-2">
+              <h5 class="text-lg font-extrabold text-gray-900 dark:text-white">Teams Plan</h5>
+            </div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-5xl font-black text-gray-900 dark:text-white" id="teams-price">$200</span>
+              <span class="text-xs text-gray-500 font-bold" id="teams-period">/mo</span>
+            </div>
+            <p class="text-xs text-primary font-bold mt-2" id="billing-subtitle">Billed monthly.</p>
+          </div>
+          
+          <ul class="space-y-4 mb-10 text-gray-600 dark:text-text-muted flex-1">
+            <li class="flex items-center gap-3 text-sm font-bold text-gray-900 dark:text-white"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Everything in Basic</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Collaborative workspaces (Up to 10 seats)</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Unlimited automated rule branches</li>
+            <li class="flex items-center gap-3 text-sm"><svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Full webhook &amp; API integration keys</li>
+          </ul>
+          <button class="mt-auto bg-primary text-black py-4 rounded-custom font-extrabold hover:bg-[#34db63] hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all text-sm">
+            Get Started
+          </button>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: PricingSection -->
+
+  <!-- BEGIN: DashboardSection -->
+  <section class="py-24 bg-gray-55 dark:bg-surface-container-low border-y border-black/10 dark:border-border-subtle">
+    <div class="container mx-auto px-6">
+      <div class="rounded-custom border border-black/10 dark:border-border-subtle overflow-hidden bg-white dark:bg-surface-container-lowest max-w-5xl mx-auto shadow-2xl reveal">
+        <img alt="Dashboard Interface" class="w-full h-auto object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0uiUBW39a2GdAb8ncPw5c983wPz9hQGJrhsJGtF5utrvqDkmz5ATtw58EBUVbZIniR_Kdfiz7xPNZcVjD7bIOYWW7-yNT2jOnZkhpG03sOmIX4qRXWUAx8BH6fV-YZ3rjQMhJz8zhFZweVXhhbSv53rpdyqZ49pV5ZBlcIRB-fAjXYfOtbeJVnekbv8eu-_1chhljI-PaqFjTC_fsXlUSjaKr-xA87WA8KL7_crunSrzoRbrNMBg-Nk8WK8"/>
+      </div>
+    </div>
+  </section>
+  <!-- END: DashboardSection -->
+
+  <!-- BEGIN: TestimonialsSection -->
+  <section class="py-32 overflow-hidden bg-white dark:bg-surface-container-lowest">
+    <div class="container mx-auto px-6 max-w-5xl">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-20 reveal">
+        <div class="inline-flex items-center gap-2 text-primary font-extrabold mb-4 uppercase tracking-wider text-sm">
+          ✨ Testimonials
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">What our users are saying</h2>
+      </div>
+      
+      <!-- Grid Testimonials -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Testimonial 1 -->
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-10 rounded-custom interactive-card text-left reveal">
+          <p class="text-gray-600 dark:text-text-muted text-lg mb-8 italic leading-relaxed">
+            "I'm impressed with how intuitive and easy-to-use this AI platform is. It has simplified complex database analytics, allowing our engineering team to construct faster, data-driven endpoints."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full overflow-hidden border border-primary/20">
+              <img alt="Michelle Davis" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcDNgO_qnoe9sXkm24VFbJQdYYcwPcTxJeaYoXwYoGptruy_XYQfkvWGg6h3tD0y_buGkwq9PwQE_b6PZ8y2HRBWfO6JlyjhMDaARstnZ1FBk6D2xsa97iZ6JOYJHhRJUm_C3TprumFeQGFMW2AADp54IlQixHEAYF1zxqZul_-9kc5axUEk3FUnLiin0x5DM96QnknySVXknAQm7LmHqj7p172CJY-uvVSHalT3q-WZHOE56ITzyd9dh9UufRlqxle-Ujc6gu8kg"/>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 dark:text-white">Michelle Davis</p>
+              <p class="text-[10px] text-gray-500 dark:text-primary uppercase tracking-widest font-extrabold">Data Analyst</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Testimonial 2 -->
+        <div class="bg-black/5 dark:bg-surface-container-low border border-black/10 dark:border-border-subtle p-10 rounded-custom interactive-card text-left reveal">
+          <p class="text-gray-600 dark:text-text-muted text-lg mb-8 italic leading-relaxed">
+            "Since implementing this AI node, we've seen a measurable increase in active user conversion and pipeline optimization. It's like having an entire data division operating in real-time."
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full overflow-hidden border border-primary/20">
+              <img alt="Sarah Thompson" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj6nfYmPTW1iiuxL_7M76w-7UTD-cLUbTRFzBMFoPu3EBM2Pn5LM2NccUPss8OK1A_8PgPCa_875HOJi5LOnBW0OgVEDeHepkZxifU6uORcE1cBUgXqVuGOiRMR2e-49Mcpte4S3tgc7Qt-S1KNAp9Y_OUJsTNFLWaMtPerONwbQvpyQfAxhR0vEV0blng4iGLxuN_q33rQISLEtyGA-eNZ4bw5wDvi36tnQtsP6aa88CMJ0IasLOWPr9fU-8ZNu2fNr9RxuXV77s"/>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 dark:text-white">Sarah Thompson</p>
+              <p class="text-[10px] text-gray-500 dark:text-primary uppercase tracking-widest font-extrabold">Sales Manager</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <!-- END: TestimonialsSection -->
+
+  <!-- BEGIN: CTASection -->
+  <section class="py-32 relative overflow-hidden bg-white dark:bg-surface-container-lowest border-t border-black/10 dark:border-border-subtle">
+    <div class="container mx-auto px-6 text-center relative z-10 max-w-4xl reveal">
+      <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight text-gray-900 dark:text-white tracking-tighter">
+        Ready to Experience the Power of AI Today?
+      </h2>
+      <p class="text-gray-600 dark:text-text-muted mb-12 max-w-2xl mx-auto text-lg leading-relaxed">
+        Elevate your business productivity with our AI SaaS platform, featuring instant setup triggers and clean analytics data nodes.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto sm:max-w-none">
+        <button class="bg-primary text-black px-10 py-5 rounded-custom font-extrabold text-lg w-full sm:w-auto hover:bg-[#34db63] hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all">
+          Get Template
+        </button>
+        <button class="bg-transparent text-gray-900 dark:text-white border border-black/20 dark:border-border-subtle px-10 py-5 rounded-custom font-extrabold text-lg w-full sm:w-auto hover:bg-black/5 dark:hover:bg-surface-bright active:scale-95 transition-all">
+          Contact Us
+        </button>
+      </div>
+    </div>
+    
+    <!-- Decorative Grid & Glow -->
+    <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none z-0"></div>
+    <div class="absolute inset-0 glow-bg opacity-50 pointer-events-none z-0"></div>
+  </section>
+  <!-- END: CTASection -->
+
+  <!-- BEGIN: Footer -->
+  <footer class="bg-white dark:bg-surface-container-lowest border-t border-black/10 dark:border-border-subtle py-20">
+    <div class="container mx-auto px-[5%] max-w-7xl">
+      <div class="flex flex-col md:flex-row justify-between items-start gap-12 text-left">
+        
+        <div class="max-w-sm">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="w-8 h-8 rounded-custom bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center font-black text-black tracking-tighter text-lg">
+              K
+            </div>
+            <span class="font-extrabold text-xl tracking-tight text-gray-900 dark:text-white">KINETIC <span class="text-primary font-bold">NOIR</span></span>
+          </div>
+          <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed text-sm">
+            Enhancing product engineering with advanced artificial intelligence pipelines, secure cloud infrastructure, and low-latency databases.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-16">
+          <div class="flex flex-col gap-4 text-sm">
+            <h6 class="font-bold uppercase text-xs tracking-widest text-primary mb-2">Company</h6>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Features</a>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Pricing</a>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Blogs</a>
+          </div>
+          <div class="flex flex-col gap-4 text-sm">
+            <h6 class="font-bold uppercase text-xs tracking-widest text-primary mb-2">Legal</h6>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Privacy Policy</a>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Terms of Service</a>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary transition-all" href="#">Careers</a>
+          </div>
+          <div class="flex flex-col gap-4 text-sm">
+            <h6 class="font-bold uppercase text-xs tracking-widest text-primary mb-2">Connect</h6>
+            <div class="flex gap-3">
+              <a class="w-10 h-10 rounded-custom border border-black/10 dark:border-border-subtle flex items-center justify-center hover:border-primary dark:hover:border-primary hover:text-primary dark:hover:text-primary transition-colors text-gray-400" href="#">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"></path></svg>
+              </a>
+              <a class="w-10 h-10 rounded-custom border border-black/10 dark:border-border-subtle flex items-center justify-center hover:border-primary dark:hover:border-primary hover:text-primary dark:hover:text-primary transition-colors text-gray-400" href="#">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="mt-20 pt-8 border-t border-black/10 dark:border-border-subtle flex flex-col md:flex-row justify-between gap-4">
+        <p class="text-sm text-gray-500">© 2026 Kinetic Noir Agency. All Rights Reserved.</p>
+        <p class="text-sm text-gray-500">Copyright Framerstore 2026</p>
+      </div>
+    </div>
+  </footer>
+  <!-- END: Footer -->
+
+  <!-- Video Modal Component -->
+  <div id="video-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div class="relative w-full max-w-4xl bg-surface-container-low border border-border-subtle rounded-custom overflow-hidden shadow-2xl">
+      <!-- Modal Close Button -->
+      <button id="close-modal" class="absolute top-4 right-4 z-[110] bg-black/60 text-white hover:text-primary p-2 rounded-custom transition-all">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+      
+      <!-- Video Element -->
+      <div class="aspect-video w-full">
+        <!-- Mock Video Player with animations -->
+        <div class="w-full h-full bg-[#0d0e10] flex flex-col justify-center items-center relative p-6">
+          <div class="w-20 h-20 rounded-full border-4 border-primary/20 border-t-primary animate-spin-slow mb-4"></div>
+          <p class="text-primary font-bold tracking-widest text-sm uppercase">Loading AI Walkthrough Demo...</p>
+          <p class="text-gray-400 text-xs mt-2">Connecting to render server...</p>
+          
+          <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white/50 text-xs">
+            <span>0:00 / 2:15</span>
+            <div class="h-1 bg-white/20 flex-1 mx-4 rounded-full overflow-hidden">
+              <div class="h-full bg-primary w-1/4 rounded-full"></div>
+            </div>
+            <span>1080p HD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Interactions -->
+  <script>
+    // 1. Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollProgress = document.getElementById('scroll-progress');
+      const totalHeight = document.body.scrollHeight - window.innerHeight;
+      const progressPercentage = (window.scrollY / totalHeight) * 100;
+      scrollProgress.style.width = `${progressPercentage}%`;
+    });
+
+    // 2. Light / Dark Mode Toggle Handler
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    themeToggleBtn.addEventListener('click', () => {
+      const htmlEl = document.documentElement;
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        htmlEl.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        htmlEl.classList.remove('light');
+        htmlEl.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Set initial theme on page load from local storage
+    if (localStorage.getItem('theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+
+    // 3. Pricing Interactive Toggle (Monthly vs. Yearly)
+    const toggleMonthlyBtn = document.getElementById('toggle-monthly');
+    const toggleYearlyBtn = document.getElementById('toggle-yearly');
+    
+    const basicPriceEl = document.getElementById('basic-price');
+    const basicPeriodEl = document.getElementById('basic-period');
+    
+    const teamsPriceEl = document.getElementById('teams-price');
+    const teamsPeriodEl = document.getElementById('teams-period');
+    const billingSubtitleEl = document.getElementById('billing-subtitle');
+
+    function selectMonthly() {
+      toggleMonthlyBtn.className = "px-8 py-2 bg-primary text-black font-extrabold rounded-custom text-sm transition-all duration-300";
+      toggleYearlyBtn.className = "px-8 py-2 text-gray-500 dark:text-gray-400 font-extrabold rounded-custom text-sm hover:text-gray-900 dark:hover:text-white transition-all duration-300";
+      
+      // Animate price updates
+      animatePrice(basicPriceEl, 67);
+      basicPeriodEl.textContent = "/mo";
+      
+      animatePrice(teamsPriceEl, 200);
+      teamsPeriodEl.textContent = "/mo";
+      billingSubtitleEl.textContent = "Billed monthly.";
+    }
+
+    function selectYearly() {
+      toggleYearlyBtn.className = "px-8 py-2 bg-primary text-black font-extrabold rounded-custom text-sm transition-all duration-300";
+      toggleMonthlyBtn.className = "px-8 py-2 text-gray-500 dark:text-gray-400 font-extrabold rounded-custom text-sm hover:text-gray-900 dark:hover:text-white transition-all duration-300";
+      
+      // Animate price updates (20% off yearly)
+      animatePrice(basicPriceEl, 53);
+      basicPeriodEl.textContent = "/mo";
+      
+      animatePrice(teamsPriceEl, 160);
+      teamsPeriodEl.textContent = "/mo";
+      billingSubtitleEl.textContent = "Billed annually ($1,920/yr).";
+    }
+
+    function animatePrice(element, targetPrice) {
+      element.classList.add('opacity-0', 'scale-90');
+      setTimeout(() => {
+        element.textContent = `$${targetPrice}`;
+        element.classList.remove('opacity-0', 'scale-90');
+        element.classList.add('opacity-100', 'scale-100');
+      }, 150);
+    }
+
+    toggleMonthlyBtn.addEventListener('click', selectMonthly);
+    toggleYearlyBtn.addEventListener('click', selectYearly);
+
+    // 4. Smooth Reveal-on-Scroll Effects
+    const reveals = document.querySelectorAll('.reveal');
+    const revealOnScroll = () => {
+      const windowHeight = window.innerHeight;
+      reveals.forEach(reveal => {
+        const elementTop = reveal.getBoundingClientRect().top;
+        const elementVisible = 100;
+        if (elementTop < windowHeight - elementVisible) {
+          reveal.classList.add('active');
+        }
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // 5. Video Modal Triggers
+    const playVideoCard = document.getElementById('play-video-card');
+    const videoModal = document.getElementById('video-modal');
+    const closeModal = document.getElementById('close-modal');
+
+    playVideoCard.addEventListener('click', () => {
+      videoModal.classList.remove('hidden');
+      videoModal.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      videoModal.classList.remove('flex');
+      videoModal.classList.add('hidden');
+    });
+
+    // Close modal on outside click
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) {
+        videoModal.classList.remove('flex');
+        videoModal.classList.add('hidden');
+      }
+    });
+
+    // 6. 3D Tilt Effect on Dashboard Mockup
+    const container = document.getElementById('dashboard-container');
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const midX = rect.width / 2;
+      const midY = rect.height / 2;
+      
+      // Calculate rotation angles
+      const rotateX = (midY - y) / 25; // max 8 degrees
+      const rotateY = (x - midX) / 25;
+      
+      const card = container.querySelector('.dashboard-preview');
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      card.style.boxShadow = `0 50px 120px -20px rgba(67, 234, 115, 0.15)`;
+    });
+
+    container.addEventListener('mouseleave', () => {
+      const card = container.querySelector('.dashboard-preview');
+      card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
+      card.style.boxShadow = ``;
+    });
+  </script>
+</body>
+</html>
